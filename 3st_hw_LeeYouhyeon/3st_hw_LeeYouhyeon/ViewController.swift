@@ -17,10 +17,10 @@ class ViewController: UITabBarController {
     
     func setTabBar(){
         let vc1 = UINavigationController(rootViewController: HomeViewController())
-        let vc2 = UINavigationController(rootViewController: SearchViewController())
-        let vc3 = UINavigationController(rootViewController: ComingViewController())
-        let vc4 = UINavigationController(rootViewController: DownloadViewController())
-        let vc5 = UINavigationController(rootViewController: MoreViewController())
+        let vc2 = SearchViewController()
+        let vc3 = ComingViewController()
+        let vc4 = DownloadViewController()
+        let vc5 = MoreViewController()
         
         self.viewControllers = [vc1, vc2, vc3, vc4, vc5]
         //선택 안 한 탭 아이템 색
