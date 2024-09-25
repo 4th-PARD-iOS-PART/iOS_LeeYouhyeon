@@ -3,6 +3,16 @@ import UIKit
 class HomeViewController: UIViewController {
     let layer1 = CAGradientLayer() // 레이어를 클래스의 프로퍼티로 선언
 
+    let cellidentifier = "cellidentifier"
+    let collectionview: UICollectionView = {
+        let flowlayout = UICollectionViewFlowLayout()
+        flowlayout.scrollDirection = .vertical
+        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
+        collectionview.backgroundColor = .clear
+        collectionview.translatesAutoresizingMaskIntoConstraints = false
+        return collectionview
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
@@ -14,6 +24,8 @@ class HomeViewController: UIViewController {
         addGradientLayer()
         
         setUI()
+        
+        collectionview.register(CustomCell.self, forCellWithReuseIdentifier: cellidentifier)
     }
     
     override func viewDidLayoutSubviews() {
@@ -64,6 +76,7 @@ class HomeViewController: UIViewController {
         let scrollView: UIScrollView = {
             let scrollViews = UIScrollView()
             scrollViews.translatesAutoresizingMaskIntoConstraints = false
+            
             return scrollViews
         }()
         view.addSubview(scrollView)
@@ -121,6 +134,10 @@ class HomeViewController: UIViewController {
             return labels
         }()
         contentView.addSubview(mylists)
+        
+        collectionview.dataSource = self
+        collectionview.delegate = self
+        contentView.addSubview(collectionview)
 
         // 제약조건 설정
         NSLayoutConstraint.activate([
@@ -155,7 +172,58 @@ class HomeViewController: UIViewController {
 
             // My List 레이블의 제약조건
             mylists.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.18),
-            mylists.leadingAnchor.constraint(equalTo: movies.trailingAnchor, constant: 39.4)
+            mylists.leadingAnchor.constraint(equalTo: movies.trailingAnchor, constant: 39.4),
+            
+            // UICollectionView 제약조건
+            collectionview.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 300),
+            collectionview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            collectionview.trailingAnchor.constraint(equalTo: contentView.trailingAnchor), // trailingAnchor 제약 추가
+            collectionview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30), // 스크롤 가능하도록 하단 제약 추가
+            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1000)
         ])
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return Model.ModelData.count
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionview.dequeueReusableCell(withReuseIdentifier: cellidentifier, for: indexPath) as? CustomCell else{
+            print("error using collectioview")
+            return UICollectionViewCell()
+        }
+        let target = Model.ModelData[indexPath.item]
+        let image = UIImage(named: "\(target.image)")
+        cell.imageView.image = image
+        return cell
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let itemWidth: CGFloat = 103 // 고정된 너비
+        let itemHeight: CGFloat = 161 // 고정된 높이
+        return CGSize(width: itemWidth, height: itemHeight)
+    }
+
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let totalSpacing: CGFloat = 30 // 좌우 여백 조정
+        let numberOfItems: CGFloat = 4 // 한 행에 4개의 아이템
+        let itemWidth: CGFloat = 103 // 셀의 너비
+
+        let inset = (collectionView.bounds.width - (numberOfItems * itemWidth) - totalSpacing) / 2
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: inset) // 좌우 여백
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        // 수평 간격
+        return 0
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        // 수직 간격
+        return 0
     }
 }
