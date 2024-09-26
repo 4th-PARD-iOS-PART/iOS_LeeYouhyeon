@@ -6,7 +6,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
     let cellidentifier = "cellidentifier"
     let collectionview: UICollectionView = {
         let flowlayout = UICollectionViewFlowLayout()
-        flowlayout.scrollDirection = .vertical
+//        flowlayout.scrollDirection = .vertical
         let collectionview = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
         collectionview.backgroundColor = .clear
         collectionview.translatesAutoresizingMaskIntoConstraints = false
@@ -36,6 +36,9 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         
         collectionview.register(CustomCell.self, forCellWithReuseIdentifier: cellidentifier)
         collectionview.register(CustomHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
+        
+        //컬렉션 뷰만 스크롤하지 못하도록 설정
+        collectionview.isScrollEnabled = false
         
         // ScrollView의 델리게이트 설정
         if let scrollView = view.subviews.compactMap({ $0 as? UIScrollView }).first {
@@ -186,7 +189,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             collectionview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionview.trailingAnchor.constraint(equalTo: contentView.trailingAnchor), // trailingAnchor 제약 추가
             collectionview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30), // 스크롤 가능하도록 하단 제약 추가
-            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1000)
+            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1500)
         ])
     }
     // 스크롤 시 배경 이미지의 알파 값 변경
@@ -261,6 +264,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout{
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         // 수직 간격
-        return 50
+        return 52
     }
 }
