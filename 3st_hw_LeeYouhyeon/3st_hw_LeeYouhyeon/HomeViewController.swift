@@ -35,6 +35,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         setUI()
         
         collectionview.register(CustomCell.self, forCellWithReuseIdentifier: cellidentifier)
+        collectionview.register(CustomHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
         
         // ScrollView의 델리게이트 설정
         if let scrollView = view.subviews.compactMap({ $0 as? UIScrollView }).first {
@@ -200,18 +201,39 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Model.ModelData.count
+    // 섹션의 개수 반환
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return Model.ModelData.count // 섹션 수는 데이터 배열의 수와 같음
     }
+
+    // 각 섹션 내 아이템 개수 반환
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return Model.ModelData[section].count // 섹션에 있는 아이템의 수
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionview.dequeueReusableCell(withReuseIdentifier: cellidentifier, for: indexPath) as? CustomCell else{
             print("error using collectioview")
             return UICollectionViewCell()
         }
-        let target = Model.ModelData[indexPath.item]
+        let target = Model.ModelData[indexPath.section][indexPath.item]
         let image = UIImage(named: "\(target.image)")
         cell.imageView.image = image
         return cell
+    }
+    
+    //헤더
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionView.elementKindSectionHeader {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! CustomHeader
+            // 섹션에 맞는 헤더 텍스트 설정
+            headerView.headerLabel.text = "Section \(indexPath.section + 1)"
+            return headerView
+        }
+        return UICollectionReusableView()
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: 100, height: 50)
     }
 }
 
@@ -239,6 +261,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout{
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         // 수직 간격
-        return 0
+        return 50
     }
 }
