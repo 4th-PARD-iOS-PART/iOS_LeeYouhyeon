@@ -6,7 +6,7 @@ class CustomHeader: UICollectionReusableView {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.boldSystemFont(ofSize: 21)
         return label
     }()
 
@@ -26,8 +26,8 @@ class CustomHeader: UICollectionReusableView {
 
         // 레이블 제약조건 설정
         NSLayoutConstraint.activate([
-            headerLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            headerLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            headerLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 14),
+            headerLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -14),
             headerLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }

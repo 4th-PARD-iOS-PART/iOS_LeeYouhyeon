@@ -185,7 +185,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             mylists.leadingAnchor.constraint(equalTo: movies.trailingAnchor, constant: 39.4),
             
             // UICollectionView 제약조건
-            collectionview.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 300),
+            collectionview.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
             collectionview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionview.trailingAnchor.constraint(equalTo: contentView.trailingAnchor), // trailingAnchor 제약 추가
             collectionview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30), // 스크롤 가능하도록 하단 제약 추가
@@ -229,8 +229,24 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! CustomHeader
-            // 섹션에 맞는 헤더 텍스트 설정
-            headerView.headerLabel.text = "Section \(indexPath.section + 1)"
+            
+        // 섹션에 맞는 헤더 텍스트 설정
+        switch indexPath.section{
+            case 0 :
+                headerView.headerLabel.text = "Popular on Netflix"
+            case 1 :
+                headerView.headerLabel.text = "Trending Now"
+            case 2 :
+                headerView.headerLabel.text = "Top 10 in Nigeria Today"
+            case 3 :
+                headerView.headerLabel.text = "My List"
+            case 4 :
+                headerView.headerLabel.text = "African Movies"
+            case 5 :
+                headerView.headerLabel.text = "Nollywood Movies & TV"
+            default:
+                headerView.headerLabel.text = "Section \(indexPath.section + 1)"
+            }
             return headerView
         }
         return UICollectionReusableView()
