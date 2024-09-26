@@ -64,6 +64,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         ])
     }
 
+//MARK: - 화면에 띄우는 모든 것 (배경 이미지 제외)
     func setUI() {
         // ScrollView 및 ContentView 설정
         let scrollView: UIScrollView = {
@@ -158,7 +159,39 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         contentView.addSubview(myListStackView)
         
         //중앙 부분 버튼
-        
+        let playButton: UIButton = {
+            let button = UIButton(type: .system)
+
+            // 버튼 텍스트 및 이미지 설정
+            button.setTitle("Play", for: .normal)
+            button.setImage(UIImage(named: "play"), for: .normal)
+
+            // UIButtonConfiguration 생성 및 설정
+            var configuration = UIButton.Configuration.filled()
+            configuration.title = "Play"
+            configuration.image = UIImage(named: "play")
+            configuration.baseBackgroundColor = UIColor(red: 0.769, green: 0.769, blue: 0.769, alpha: 1)
+            configuration.cornerStyle = .medium
+
+            // 텍스트와 이미지 간의 간격 조절
+            let imageTitleSpacing: CGFloat = 15 // 원하는 간격을 설정
+            configuration.imagePadding = imageTitleSpacing
+
+            // UIButton에 configuration 적용
+            button.configuration = configuration
+            
+            // 기타 속성 설정
+            button.tintColor = .black
+            button.setTitleColor(.black, for: .normal)
+            button.titleLabel?.font = UIFont(name: "SFProDisplay-Semibold", size: 20.46)
+            
+            button.translatesAutoresizingMaskIntoConstraints = false
+            
+            return button
+        }()
+
+
+        contentView.addSubview(playButton)
         
         //중앙 부분 아이콘2
         let Infoimg: UIImageView = {
@@ -194,6 +227,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         collectionview.delegate = self
         contentView.addSubview(collectionview)
 
+//MARK: -제약조건
         // 제약조건 설정
         NSLayoutConstraint.activate([
             // ScrollView의 제약조건
@@ -234,6 +268,13 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             myListStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52),
             myListStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -282),
             
+            //playButton 제약조건
+            playButton.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
+            playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 135),
+            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -129),
+            playButton.widthAnchor.constraint(equalToConstant: 116),
+            playButton.heightAnchor.constraint(equalToConstant: 45),
+            
             //InfoStackView 제약조건
             InfoStackView.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
             InfoStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 287),
@@ -258,6 +299,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
     }
 }
 
+//MARK: - 콜렉션 뷰 셀과 헤더 관리
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
     // 섹션의 개수 반환
     func numberOfSections(in collectionView: UICollectionView) -> Int {
