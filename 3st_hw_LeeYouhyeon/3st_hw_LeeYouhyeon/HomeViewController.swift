@@ -17,7 +17,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
     let backgroundImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "movie1") // 원하는 배경 이미지로 변경
+        imageView.image = UIImage(named: "back") // 원하는 배경 이미지로 변경
         imageView.contentMode = .scaleAspectFill // 이미지 비율에 맞게 조정
         return imageView
     }()
@@ -29,8 +29,6 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         self.navigationController?.isNavigationBarHidden = true
         
         setBackgroundImage()
-        
-        addGradientLayer()
         
         setUI()
         
@@ -64,21 +62,6 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             backgroundImage.heightAnchor.constraint(equalToConstant: 415)
         ])
-    }
-
-    func addGradientLayer() {
-        // CAGradientLayer 인스턴스 생성 및 색상 설정
-        layer1.colors = [
-            UIColor(red: 0, green: 0, blue: 0, alpha: 0.45).cgColor,
-            UIColor(red: 0, green: 0, blue: 0, alpha: 0).cgColor
-        ]
-        
-        // 시작점과 끝점 설정
-        layer1.startPoint = CGPoint(x: 0.5, y: 0) // 중앙 상단
-        layer1.endPoint = CGPoint(x: 0.5, y: 1)   // 중앙 하단
-        
-        // 레이어를 view에 추가 (가장 아래에)
-        view.layer.insertSublayer(layer1, at: 1) // 배경 이미지 위에 추가
     }
 
     func setUI() {
@@ -145,6 +128,68 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         }()
         contentView.addSubview(mylists)
         
+        //중앙 부분 아이콘1
+        let myListPlusimg: UIImageView = {
+            let img = UIImageView()
+            img.image = UIImage(named: "plus")
+            img.translatesAutoresizingMaskIntoConstraints = false
+            img.contentMode = .scaleAspectFit
+            return img
+        }()
+        
+        let myListPlusLabel: UILabel = {
+            let label = UILabel()
+            label.text = "My List"
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.textAlignment = .center
+            label.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+            label.font = UIFont(name: "SFProDisplay-Regular", size: 13.64)
+            return label
+        }()
+        
+        let myListStackView: UIStackView = {
+            let stack = UIStackView(arrangedSubviews: [myListPlusimg, myListPlusLabel])
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.axis = .vertical // 수평 스택
+            stack.spacing = 2 // 간격 설정
+            stack.alignment = .center
+            return stack
+        }()
+        contentView.addSubview(myListStackView)
+        
+        //중앙 부분 버튼
+        
+        
+        //중앙 부분 아이콘2
+        let Infoimg: UIImageView = {
+            let img = UIImageView()
+            img.image = UIImage(named: "info")
+            img.translatesAutoresizingMaskIntoConstraints = false
+            img.contentMode = .scaleAspectFit
+            return img
+        }()
+        
+        let InfoLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Info"
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.textAlignment = .center
+            label.textColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+            label.font = UIFont(name: "SFProDisplay-Regular", size: 13.64)
+            return label
+        }()
+        
+        let InfoStackView: UIStackView = {
+            let stack = UIStackView(arrangedSubviews: [Infoimg, InfoLabel])
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.axis = .vertical // 수평 스택
+            stack.spacing = 2 // 간격 설정
+            stack.alignment = .center
+            return stack
+        }()
+        contentView.addSubview(InfoStackView)
+        
+        
         collectionview.dataSource = self
         collectionview.delegate = self
         contentView.addSubview(collectionview)
@@ -184,12 +229,22 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             mylists.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15.18),
             mylists.leadingAnchor.constraint(equalTo: movies.trailingAnchor, constant: 39.4),
             
+            //myListStackView 제약조건
+            myListStackView.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
+            myListStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52),
+            myListStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -282),
+            
+            //InfoStackView 제약조건
+            InfoStackView.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
+            InfoStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 287),
+            InfoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -64),
+            
             // UICollectionView 제약조건
-            collectionview.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
+            collectionview.topAnchor.constraint(equalTo: myListStackView.bottomAnchor, constant: 26),
             collectionview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionview.trailingAnchor.constraint(equalTo: contentView.trailingAnchor), // trailingAnchor 제약 추가
             collectionview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30), // 스크롤 가능하도록 하단 제약 추가
-            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1500)
+            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1250)
         ])
     }
     // 스크롤 시 배경 이미지의 알파 값 변경
