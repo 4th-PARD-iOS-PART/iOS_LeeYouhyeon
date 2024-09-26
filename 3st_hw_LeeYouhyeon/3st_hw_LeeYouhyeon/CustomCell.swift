@@ -3,7 +3,7 @@ import UIKit
 class CustomCell: UICollectionViewCell {
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
+//        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         
         
@@ -28,7 +28,9 @@ class CustomCell: UICollectionViewCell {
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            imageView.widthAnchor.constraint(equalToConstant: 103), // 고정된 너비
+//            imageView.heightAnchor.constraint(equalToConstant: 161)
         ])
     }
 }

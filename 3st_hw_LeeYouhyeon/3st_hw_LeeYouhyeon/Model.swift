@@ -24,10 +24,10 @@ extension Model{
         Model(title: "movie9", image: "movie9"),
         ],
         [
-        Model(title: "movie7", image: "movie7"),
-        Model(title: "movie7", image: "movie7"),
-        Model(title: "movie8", image: "movie8"),
-        Model(title: "movie9", image: "movie9"),
+        Model(title: "movie10", image: "movie10"),
+        Model(title: "movie11", image: "movie11"),
+        Model(title: "movie12", image: "movie12"),
+        Model(title: "movie13", image: "movie13"),
         ]
 //        Model(title: "movie7", image: "movie7"),
     ]

@@ -247,12 +247,12 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout{
 
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let totalSpacing: CGFloat = 7 // 좌우 여백 조정
-        let numberOfItems: CGFloat = 4 // 한 행에 4개의 아이템
+        let totalSpacing: CGFloat = 0 // 좌우 여백 조정
+        let numberOfItems: CGFloat = 5 // 한 행에 4개의 아이템
         let itemWidth: CGFloat = 103 // 셀의 너비
 
         let inset = (collectionView.bounds.width - (numberOfItems * itemWidth) - totalSpacing) / 2
-        return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset) // 좌우 여백
+        return UIEdgeInsets(top: 0, left: 7, bottom: 0, right: inset) // 좌우 여백
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
