@@ -1,6 +1,6 @@
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UIScrollViewDelegate {
     let layer1 = CAGradientLayer() // 레이어를 클래스의 프로퍼티로 선언
 
     let cellidentifier = "cellidentifier"
@@ -11,6 +11,15 @@ class HomeViewController: UIViewController {
         collectionview.backgroundColor = .clear
         collectionview.translatesAutoresizingMaskIntoConstraints = false
         return collectionview
+    }()
+    
+    // 배경 이미지 뷰 설정
+    let backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "movie1") // 원하는 배경 이미지로 변경
+        imageView.contentMode = .scaleAspectFill // 이미지 비율에 맞게 조정
+        return imageView
     }()
     
     override func viewDidLoad() {
@@ -26,6 +35,11 @@ class HomeViewController: UIViewController {
         setUI()
         
         collectionview.register(CustomCell.self, forCellWithReuseIdentifier: cellidentifier)
+        
+        // ScrollView의 델리게이트 설정
+        if let scrollView = view.subviews.compactMap({ $0 as? UIScrollView }).first {
+            scrollView.delegate = self
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -35,14 +49,6 @@ class HomeViewController: UIViewController {
     }
 
     func setBackgroundImage() {
-        // 배경 이미지 뷰 설정
-        let backgroundImage: UIImageView = {
-            let imageView = UIImageView()
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-            imageView.image = UIImage(named: "movie1") // 원하는 배경 이미지로 변경
-            imageView.contentMode = .scaleAspectFill // 이미지 비율에 맞게 조정
-            return imageView
-        }()
         
         // 배경 이미지 뷰를 뷰에 추가
         view.addSubview(backgroundImage)
@@ -182,6 +188,15 @@ class HomeViewController: UIViewController {
             collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1000)
         ])
     }
+    // 스크롤 시 배경 이미지의 알파 값 변경
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let height = backgroundImage.frame.height
+        
+        // 배경 이미지의 알파 값 조정
+        let alpha = max(0, 1 - (offsetY / height))
+        backgroundImage.alpha = alpha
+    }
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
@@ -210,12 +225,12 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout{
 
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let totalSpacing: CGFloat = 30 // 좌우 여백 조정
+        let totalSpacing: CGFloat = 7 // 좌우 여백 조정
         let numberOfItems: CGFloat = 4 // 한 행에 4개의 아이템
         let itemWidth: CGFloat = 103 // 셀의 너비
 
         let inset = (collectionView.bounds.width - (numberOfItems * itemWidth) - totalSpacing) / 2
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: inset) // 좌우 여백
+        return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset) // 좌우 여백
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
