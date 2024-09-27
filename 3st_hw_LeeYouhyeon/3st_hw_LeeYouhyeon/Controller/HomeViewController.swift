@@ -279,7 +279,7 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             InfoStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 287),
             InfoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -64),
             
-            //테이블뷰 제액조건
+            //테이블뷰 제약조건
             tableViewUI.topAnchor.constraint(equalTo: InfoStackView.bottomAnchor, constant: 20), // 테이블 뷰 위치 조정
             tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
