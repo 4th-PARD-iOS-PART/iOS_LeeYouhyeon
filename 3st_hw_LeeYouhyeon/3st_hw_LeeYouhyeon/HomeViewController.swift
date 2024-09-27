@@ -2,16 +2,6 @@ import UIKit
 
 class HomeViewController: UIViewController, UIScrollViewDelegate {
     let layer1 = CAGradientLayer() // 레이어를 클래스의 프로퍼티로 선언
-
-    let cellidentifier = "cellidentifier"
-    let collectionview: UICollectionView = {
-        let flowlayout = UICollectionViewFlowLayout()
-//        flowlayout.scrollDirection = .vertical
-        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: flowlayout)
-        collectionview.backgroundColor = .clear
-        collectionview.translatesAutoresizingMaskIntoConstraints = false
-        return collectionview
-    }()
     
     // 배경 이미지 뷰 설정
     let backgroundImage: UIImageView = {
@@ -20,6 +10,16 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         imageView.image = UIImage(named: "back") // 원하는 배경 이미지로 변경
         imageView.contentMode = .scaleAspectFill // 이미지 비율에 맞게 조정
         return imageView
+    }()
+    
+    //테이블 뷰
+    let tableViewUI: UITableView = {
+        let tableVIew = UITableView(frame: .zero, style: .grouped)
+//        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        tableVIew.backgroundColor = .clear // 테이블 뷰 배경색을 투명하게 설정
+        tableVIew.separatorStyle = .none   // 셀 구분선 숨기기
+        tableVIew.translatesAutoresizingMaskIntoConstraints = false
+        return tableVIew
     }()
     
     override func viewDidLoad() {
@@ -32,11 +32,8 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         
         setUI()
         
-        collectionview.register(CustomCell.self, forCellWithReuseIdentifier: cellidentifier)
-        collectionview.register(CustomHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "header")
-        
-        //컬렉션 뷰만 스크롤하지 못하도록 설정
-        collectionview.isScrollEnabled = false
+        tableViewUI.dataSource = self
+        tableViewUI.delegate = self
         
         // ScrollView의 델리게이트 설정
         if let scrollView = view.subviews.compactMap({ $0 as? UIScrollView }).first {
@@ -222,11 +219,12 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
         }()
         contentView.addSubview(InfoStackView)
         
-        
-        collectionview.dataSource = self
-        collectionview.delegate = self
-        contentView.addSubview(collectionview)
 
+        contentView.addSubview(tableViewUI)
+        tableViewUI.register(TableCustomCell.self, forCellReuseIdentifier: "cell")
+        // 테이블 뷰 스크롤 비활성화
+        tableViewUI.isScrollEnabled = false
+        
 //MARK: -제약조건
         // 제약조건 설정
         NSLayoutConstraint.activate([
@@ -281,12 +279,12 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             InfoStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 287),
             InfoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -64),
             
-            // UICollectionView 제약조건
-            collectionview.topAnchor.constraint(equalTo: myListStackView.bottomAnchor, constant: 26),
-            collectionview.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            collectionview.trailingAnchor.constraint(equalTo: contentView.trailingAnchor), // trailingAnchor 제약 추가
-            collectionview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30), // 스크롤 가능하도록 하단 제약 추가
-            collectionview.heightAnchor.constraint(greaterThanOrEqualToConstant: 1250)
+            //테이블뷰 제액조건
+            tableViewUI.topAnchor.constraint(equalTo: InfoStackView.bottomAnchor, constant: 20), // 테이블 뷰 위치 조정
+            tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableViewUI.bottomAnchor.constraint(equalTo: contentView.bottomAnchor), // contentView의 아래쪽에 위치
+            tableViewUI.heightAnchor.constraint(equalToConstant:1400)
         ])
     }
     // 스크롤 시 배경 이미지의 알파 값 변경
@@ -301,87 +299,107 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             backgroundImage.alpha = alpha
         }
     }
-
+    
 }
 
-//MARK: - 콜렉션 뷰 셀과 헤더 관리
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
-    // 섹션의 개수 반환
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return Model.ModelData.count // 섹션 수는 데이터 배열의 수와 같음
+// MARK: - 테이블뷰
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
-
-    // 각 섹션 내 아이템 개수 반환
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Model.ModelData[section].count // 섹션에 있는 아이템의 수
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionview.dequeueReusableCell(withReuseIdentifier: cellidentifier, for: indexPath) as? CustomCell else{
-            print("error using collectioview")
-            return UICollectionViewCell()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TableCustomCell else {
+            return UITableViewCell()
         }
-        let target = Model.ModelData[indexPath.section][indexPath.item]
-        let image = UIImage(named: "\(target.image)")
-        cell.imageView.image = image
+        
+        switch indexPath.section {
+        case 0:
+            cell.getSectionNumber(num: 0)
+        case 1:
+            cell.getSectionNumber(num: 1)
+        case 2:
+            cell.getSectionNumber(num: 2)
+        case 3:
+            cell.getSectionNumber(num: 3)
+        case 4:
+            cell.getSectionNumber(num: 4)
+        case 5:
+            cell.getSectionNumber(num: 5)
+        default:
+            cell.getSectionNumber(num: 0)
+        }
+        
+        cell.backgroundColor = .clear // 셀의 배경색을 투명하게 설정
+        
         return cell
     }
     
-    //헤더
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as! CustomHeader
-            
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Model.ModelData.count
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 선택된 셀을 가져옴
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        
+        // 셀의 배경색을 변경
+        cell.contentView.backgroundColor = .black
+        
+        // 선택된 셀을 비활성화 해제 (선택 시 색상 유지)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 161.0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50.0
+    }
+
+// MARK: - 테이블뷰 헤더
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        // 이때는 꺼야함.... 이것때문에 삽질...
+//            headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerView.backgroundColor = UIColor.black
+
+        let headerTitle = UILabel()
+        headerTitle.translatesAutoresizingMaskIntoConstraints = false
+        
         // 섹션에 맞는 헤더 텍스트 설정
-        switch indexPath.section{
-            case 0 :
-                headerView.headerLabel.text = "Popular on Netflix"
-            case 1 :
-                headerView.headerLabel.text = "Trending Now"
-            case 2 :
-                headerView.headerLabel.text = "Top 10 in Nigeria Today"
-            case 3 :
-                headerView.headerLabel.text = "My List"
-            case 4 :
-                headerView.headerLabel.text = "African Movies"
-            case 5 :
-                headerView.headerLabel.text = "Nollywood Movies & TV"
-            default:
-                headerView.headerLabel.text = "Section \(indexPath.section + 1)"
-            }
-            return headerView
+        switch section {
+        case 0:
+            headerTitle.text = "Popular on Netflix"
+        case 1:
+            headerTitle.text = "Trending Now"
+        case 2:
+            headerTitle.text = "Top 10 in Nigeria Today"
+        case 3:
+            headerTitle.text = "My List"
+        case 4:
+            headerTitle.text = "African Movies"
+        case 5:
+            headerTitle.text = "Nollywood Movies & TV"
+        default:
+            headerTitle.text = "Section \(section + 1)"
         }
-        return UICollectionReusableView()
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: 100, height: 50)
-    }
-}
+        
+        headerTitle.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        headerTitle.textColor = .white
 
-extension HomeViewController: UICollectionViewDelegateFlowLayout{
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let itemWidth: CGFloat = 103 // 고정된 너비
-        let itemHeight: CGFloat = 161 // 고정된 높이
-        return CGSize(width: itemWidth, height: itemHeight)
-    }
+        headerView.addSubview(headerTitle)
 
+        NSLayoutConstraint.activate([
+            headerTitle.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 0),
+            headerTitle.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 8),
+            headerTitle.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -8),
+            headerTitle.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0)
+        ])
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        let totalSpacing: CGFloat = 0 // 좌우 여백 조정
-        let numberOfItems: CGFloat = 5 // 한 행에 4개의 아이템
-        let itemWidth: CGFloat = 103 // 셀의 너비
-
-        let inset = (collectionView.bounds.width - (numberOfItems * itemWidth) - totalSpacing) / 2
-        return UIEdgeInsets(top: 0, left: 7, bottom: 0, right: inset) // 좌우 여백
+        return headerView
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        // 수평 간격
-        return 0
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        // 수직 간격
-        return 52
-    }
-}
+
