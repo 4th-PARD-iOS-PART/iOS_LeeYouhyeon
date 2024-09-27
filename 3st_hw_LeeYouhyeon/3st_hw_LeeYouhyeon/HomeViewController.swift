@@ -291,13 +291,17 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
     }
     // 스크롤 시 배경 이미지의 알파 값 변경
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let height = backgroundImage.frame.height
-        
-        // 배경 이미지의 알파 값 조정
-        let alpha = max(0, 1 - (offsetY / height))
-        backgroundImage.alpha = alpha
+        // Check if the scroll view is scrolling vertically
+        if scrollView.contentOffset.y != 0 {
+            let offsetY = scrollView.contentOffset.y
+            let height = backgroundImage.frame.height
+            
+            // 배경 이미지의 알파 값 조정
+            let alpha = max(0, 1 - (offsetY / height))
+            backgroundImage.alpha = alpha
+        }
     }
+
 }
 
 //MARK: - 콜렉션 뷰 셀과 헤더 관리
