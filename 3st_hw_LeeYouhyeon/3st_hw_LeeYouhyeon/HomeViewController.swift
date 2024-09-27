@@ -270,9 +270,10 @@ class HomeViewController: UIViewController, UIScrollViewDelegate {
             
             //playButton 제약조건
             playButton.topAnchor.constraint(equalTo: mylists.bottomAnchor, constant: 338.8),
-            playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 135),
-            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -129),
-            playButton.widthAnchor.constraint(equalToConstant: 116),
+//            playButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 135),
+//            playButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -129),
+            playButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            playButton.widthAnchor.constraint(equalToConstant: 110),
             playButton.heightAnchor.constraint(equalToConstant: 45),
             
             //InfoStackView 제약조건
