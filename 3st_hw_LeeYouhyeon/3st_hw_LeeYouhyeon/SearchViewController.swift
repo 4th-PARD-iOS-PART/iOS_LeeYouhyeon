@@ -222,6 +222,8 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
 
         contentView.addSubview(tableViewUI)
         tableViewUI.register(TableCustomCell.self, forCellReuseIdentifier: "Cell")
+        // 테이블 뷰 스크롤 비활성화
+        tableViewUI.isScrollEnabled = false
         
 //MARK: -제약조건
         // 제약조건 설정
@@ -282,7 +284,7 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
             tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             tableViewUI.bottomAnchor.constraint(equalTo: contentView.bottomAnchor), // contentView의 아래쪽에 위치
-            tableViewUI.heightAnchor.constraint(equalToConstant: 300)
+            tableViewUI.heightAnchor.constraint(equalToConstant:1500)
         ])
     }
     // 스크롤 시 배경 이미지의 알파 값 변경
@@ -309,7 +311,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCustomCell else {
             return UITableViewCell()
         }
-        
+        let imageName = Model.ModelData[indexPath.section][indexPath.row].image
+        cell.imageView?.image = UIImage(named: imageName)
         cell.backgroundColor = .clear // 셀의 배경색을 투명하게 설정
         
         return cell
@@ -330,16 +333,16 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    
-// MARK: - 테이블뷰 헤더
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100.0
+        return 161.0
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50.0
     }
 
+// MARK: - 테이블뷰 헤더
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         // 이때는 꺼야함.... 이것때문에 삽질...
