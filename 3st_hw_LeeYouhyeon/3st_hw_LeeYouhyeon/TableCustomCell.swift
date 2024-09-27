@@ -9,6 +9,8 @@ class TableCustomCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: "Cell")
+        
+        
         contentView.addSubview(label)
         contentView.addSubview(image)
     }

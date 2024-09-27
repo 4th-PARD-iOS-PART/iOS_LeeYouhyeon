@@ -16,6 +16,8 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
     let tableViewUI: UITableView = {
         let tableVIew = UITableView(frame: .zero, style: .grouped)
 //        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        tableVIew.backgroundColor = .clear // 테이블 뷰 배경색을 투명하게 설정
+        tableVIew.separatorStyle = .none   // 셀 구분선 숨기기
         tableVIew.translatesAutoresizingMaskIntoConstraints = false
         return tableVIew
     }()
@@ -301,15 +303,15 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
 // MARK: - 테이블뷰
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Model.ModelData[section].count
+        return 1
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableCustomCell else {
             return UITableViewCell()
         }
         
-        let imageName = Model.ModelData[indexPath.section][indexPath.row].image
-        cell.imageView?.image = UIImage(named: imageName)
+        cell.backgroundColor = .clear // 셀의 배경색을 투명하게 설정
+        
         return cell
     }
     
@@ -317,13 +319,25 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         return Model.ModelData.count
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 선택된 셀을 가져옴
+        guard let cell = tableView.cellForRow(at: indexPath) else { return }
+        
+        // 셀의 배경색을 변경
+        cell.contentView.backgroundColor = .black
+        
+        // 선택된 셀을 비활성화 해제 (선택 시 색상 유지)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
     
+// MARK: - 테이블뷰 헤더
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100.0
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 70.0
+        return 50.0
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
