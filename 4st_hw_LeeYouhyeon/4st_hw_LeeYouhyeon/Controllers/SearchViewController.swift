@@ -1,7 +1,7 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-    var searchText: String = ""
+    var searchText: String = "" //여기다가 검색 입력값 저장
     var filteredData: [SearchModel] = SearchModel.SearchData // 필터링된 데이터 배열
     
     //서치바
@@ -69,7 +69,7 @@ class SearchViewController: UIViewController {
         setupUI()
     }
     
-    //탭바 배경색이 왜 얘만 바뀔까....
+    //탭바 배경색이 왜 얘만 바뀔까.... 그래서 고정해버림
     override func viewWillAppear(_ animated: Bool) {
         tabBarController?.tabBar.barTintColor = .black
     }
@@ -162,7 +162,7 @@ class SearchViewController: UIViewController {
 
 }
 
-// UISearchBarDelegate 기능을 extension으로 구현
+//서치바 기능을 extension으로 구현
 extension SearchViewController: UISearchBarDelegate {
     
     // 검색 버튼 클릭 시 호출되는 메서드
@@ -206,6 +206,7 @@ extension SearchViewController: UISearchBarDelegate {
     }
 }
 
+//테이블 뷰 관련 extension
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredData.count
