@@ -51,6 +51,7 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .black
         
         // 기본적으로 전체 데이터를 보여줌
         filteredData = SearchModel.SearchData
@@ -64,7 +65,6 @@ class SearchViewController: UIViewController {
         tableViewUI.dataSource = self
         tableViewUI.delegate = self
         
-        view.backgroundColor = .black
         
         setupUI()
     }

@@ -3,6 +3,15 @@
 import UIKit
 
 class ComingViewController: UIViewController{
+    
+    let tableViewUI: UITableView = {
+        let tableVIew = UITableView()
+        tableVIew.backgroundColor = .clear
+        tableVIew.translatesAutoresizingMaskIntoConstraints = false
+        tableVIew.separatorStyle = .none
+        return tableVIew
+    }()
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         
@@ -10,7 +19,16 @@ class ComingViewController: UIViewController{
         self.navigationController?.isNavigationBarHidden = true
         
         view.backgroundColor = .black
+        
+        tableViewUI.dataSource = self
+        tableViewUI.delegate = self
+        
         setUI()
+    }
+    
+    //탭바 배경색이 왜 얘만 바뀔까.... 그래서 고정해버림
+    override func viewWillAppear(_ animated: Bool) {
+        tabBarController?.tabBar.barTintColor = .black
     }
     
     func setUI(){
@@ -49,11 +67,14 @@ class ComingViewController: UIViewController{
             return labels
         }()
         
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(roundButton)
         contentView.addSubview(label)
+        contentView.addSubview(tableViewUI)
         
+        tableViewUI.register(ComingTableCell.self, forCellReuseIdentifier: "ComingCell")
         
         NSLayoutConstraint.activate([
 
@@ -81,7 +102,48 @@ class ComingViewController: UIViewController{
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             label.leadingAnchor.constraint(equalTo: roundButton.trailingAnchor, constant: 7),
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -235),
+            
+            tableViewUI.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 29),
+            tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableViewUI.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            tableViewUI.heightAnchor.constraint(equalToConstant:1300)
         ])
         
+    }
+}
+
+extension ComingViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ComingModel.ComingData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "ComingCell", for: indexPath) as? ComingTableCell else {
+            return UITableViewCell()
+        }
+        
+        cell.backgroundColor = .black
+        
+        let imageName = ComingModel.ComingData[indexPath.row].image
+        cell.image.image = UIImage(named: imageName)
+        
+        cell.dates.text = ComingModel.ComingData[indexPath.row].date
+        cell.Title.text = ComingModel.ComingData[indexPath.row].title
+        
+        cell.Contents.text = ComingModel.ComingData[indexPath.row].contents
+        cell.Genre.text = ComingModel.ComingData[indexPath.row].genre
+         
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 402.0
     }
 }
