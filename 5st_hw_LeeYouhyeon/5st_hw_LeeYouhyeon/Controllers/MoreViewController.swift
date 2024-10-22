@@ -9,10 +9,12 @@
 import UIKit
 
 class MoreViewController: UIViewController{
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         view.backgroundColor = .black
         setUI()
+        
     }
     
     func setUI(){
@@ -32,4 +34,5 @@ class MoreViewController: UIViewController{
         ])
         
     }
+    
 }

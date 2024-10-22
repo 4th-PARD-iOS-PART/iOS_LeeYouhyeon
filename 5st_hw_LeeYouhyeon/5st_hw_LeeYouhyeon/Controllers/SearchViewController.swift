@@ -1,6 +1,7 @@
 import UIKit
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, ModalFromSearchDelegate {
+    
     var searchText: String = "" //여기다가 검색 입력값 저장
     var filteredData: [SearchModel] = SearchModel.SearchData // 필터링된 데이터 배열
     
@@ -159,6 +160,10 @@ class SearchViewController: UIViewController {
             tableViewUI.heightAnchor.constraint(equalToConstant:700)
         ])
     }
+    
+    func didSelectItem(_ item: SearchModel) {
+        print("Delegate로 전달된 데이터: \(item.title)")
+    }
 
 }
 
@@ -226,6 +231,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
+    //셀 선택시 실행되는 함수
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 선택된 셀을 가져옴
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
@@ -235,6 +241,22 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         
         // 선택된 셀을 비활성화 해제 (선택 시 색상 유지)
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // 선택된 셀의 데이터
+        let selectedItem = filteredData[indexPath.row]
+        
+        // ModalViewController 생성 및 delegate 설정
+        let modalVC = ModalViewController()
+        modalVC.selectedData = selectedItem
+        modalVC.delegate = self  // delegate 연결
+
+        // 선택한 데이터를 delegate를 통해 전달
+        modalVC.delegate?.didSelectItem(selectedItem)
+
+        
+        let nvController = UINavigationController(rootViewController: modalVC)
+        self.present(nvController, animated: true, completion: nil)
+        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
