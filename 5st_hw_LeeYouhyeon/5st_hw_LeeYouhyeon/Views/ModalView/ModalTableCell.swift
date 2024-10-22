@@ -1,6 +1,6 @@
 import UIKit
 
-class ModalTableCell: UITableViewCell {
+class ModalTableCell: UIView {
     
     let playImageView: UIImageView = {
         let img = UIImageView()
@@ -17,7 +17,6 @@ class ModalTableCell: UITableViewCell {
         label.text = "1. Game Changer"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 12)
-        
         return label
     }()
     
@@ -27,7 +26,6 @@ class ModalTableCell: UITableViewCell {
         label.text = "37m"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 10)
-        
         return label
     }()
     
@@ -37,60 +35,55 @@ class ModalTableCell: UITableViewCell {
         label.text = "Flying high: Chrishell reveals her latest love - Jason. In LA, the agents get real about the relationship while Christine readies her return."
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 12)
-        
-        // 자동 줄바꿈을 위해 설정
-        label.numberOfLines = 0 // 0은 무제한 줄 수를 의미
+        label.numberOfLines = 0 // 무제한 줄 수 설정
         label.lineBreakMode = .byWordWrapping
-
         return label
     }()
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
     }
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        // 라벨과 이미지 뷰 추가
-        contentView.addSubview(playImageView)
-        contentView.addSubview(name)
-        contentView.addSubview(time)
-        contentView.addSubview(explain)
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupViews()
+    }
+    
+    private func setupViews() { // 뷰 설정 메서드
+        // 뷰에 서브뷰 추가
+        addSubview(playImageView)
+        addSubview(name)
+        addSubview(time)
+        addSubview(explain)
         
         // 제약조건 설정
-        setLabel()
+        setLabelConstraints()
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-    }
-    
-    func setLabel() {
-        
+    private func setLabelConstraints() {
         NSLayoutConstraint.activate([
-            
-            //플레이 버튼 제약조건
-            playImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            playImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//            playImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            // 플레이 이미지 제약조건
+            playImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            playImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             playImageView.widthAnchor.constraint(equalToConstant: 124),
             playImageView.heightAnchor.constraint(equalToConstant: 69),
             
-            name.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20.5),
+            // 이름 레이블 제약조건
+            name.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             name.leadingAnchor.constraint(equalTo: playImageView.trailingAnchor, constant: 8),
-            name.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -116),
+            name.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
-            time.topAnchor.constraint(equalTo: name.bottomAnchor),
+            // 시간 레이블 제약조건
+            time.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 4),
             time.leadingAnchor.constraint(equalTo: playImageView.trailingAnchor, constant: 8),
-            time.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -187),
+            time.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             
+            // 설명 레이블 제약조건
             explain.topAnchor.constraint(equalTo: playImageView.bottomAnchor, constant: 8),
-            explain.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            explain.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            explain.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -19.5),
-            
+            explain.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            explain.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            explain.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
         ])
-
     }
 }

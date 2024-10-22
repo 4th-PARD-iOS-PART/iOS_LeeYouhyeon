@@ -24,9 +24,6 @@ class ModalViewController: UIViewController {
         
         view.backgroundColor = .black
         
-        tableViewUI.dataSource = self
-        tableViewUI.delegate = self
-        
         setUI()
         
     }
@@ -391,8 +388,8 @@ class ModalViewController: UIViewController {
         
         contentView.addSubview(seasonnameLabel)
         contentView.addSubview(seasonimg)
+
                 
-        tableViewUI.register(ModalTableCell.self, forCellReuseIdentifier: "modalCell")
         
         NSLayoutConstraint.activate([
             // scrollView의 제약조건 설정
@@ -487,7 +484,7 @@ class ModalViewController: UIViewController {
 //            mainExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -510),
             subExplainLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             subExplainLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            subExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -320),
+//            subExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -320),
 //            
             mylistImg.topAnchor.constraint(equalTo: subExplainLabel.bottomAnchor, constant: 32),
             mylistImg.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 39),
@@ -529,10 +526,39 @@ class ModalViewController: UIViewController {
             
             seasonimg.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 97.5), //임시값
             seasonimg.leadingAnchor.constraint(equalTo: seasonnameLabel.trailingAnchor, constant: 6),
-            seasonimg.bottomAnchor.constraint(equalTo: seasonnameLabel.bottomAnchor),
-        
+//            seasonimg.bottomAnchor.constraint(equalTo: seasonnameLabel.bottomAnchor),
+
         ])
         
+        // ModalTableCell이 추가할 UIView라고 가정
+        let modalCellHeight: CGFloat = 122 // 높이는 필요에 맞게 조정
+
+        for index in 0..<10 {
+            let modalCell = ModalTableCell() // 셀 초기화
+            modalCell.translatesAutoresizingMaskIntoConstraints = false
+        //    modalCell.backgroundColor = .lightGray // 각 modalCell에 배경색 추가
+
+            // contentView에 modalCell 추가
+            contentView.addSubview(modalCell)
+
+            // 기본 제약조건 설정
+            var constraints: [NSLayoutConstraint] = [
+                modalCell.topAnchor.constraint(equalTo: index == 0 ? seasonimg.bottomAnchor : (contentView.subviews[contentView.subviews.count - 2] as! ModalTableCell).bottomAnchor, constant: 10), // 각 셀 사이에 간격 추가
+                modalCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                modalCell.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                modalCell.heightAnchor.constraint(equalToConstant: modalCellHeight)
+            ]
+
+            // 마지막 셀의 제약조건 추가
+            if index == 9 {
+                let bottomConstraint = modalCell.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+                constraints.append(bottomConstraint) // 마지막 modalCell의 bottomAnchor를 contentView의 bottomAnchor와 연결
+            }
+
+            // 제약조건 활성화
+            NSLayoutConstraint.activate(constraints)
+        }
+
     }
     
     @objc func dismissModal(){
@@ -540,31 +566,7 @@ class ModalViewController: UIViewController {
 //        print("ff")
     }
     
+    
 }
 
 
-extension ModalViewController: UITableViewDelegate, UITableViewDataSource{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return SearchModel.SearchData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "modalCell", for: indexPath) as? ModalTableCell else {
-            return UITableViewCell()
-        }
-        
-        cell.backgroundColor = .clear
-         
-        cell.selectionStyle = .none
-        
-        return cell
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 142
-    }
-}
