@@ -1,6 +1,6 @@
 import UIKit
 
-class SearchViewController: UIViewController, ModalFromSearchDelegate {
+class SearchViewController: UIViewController {
     
     var searchText: String = "" //여기다가 검색 입력값 저장
     var filteredData: [SearchModel] = SearchModel.SearchData // 필터링된 데이터 배열
@@ -161,9 +161,9 @@ class SearchViewController: UIViewController, ModalFromSearchDelegate {
         ])
     }
     
-    func didSelectItem(_ item: SearchModel) {
-        print("Delegate로 전달된 데이터: \(item.title)")
-    }
+//    func didSelectItem(_ item: SearchModel) {
+//        print("Delegate로 전달된 데이터: \(item.title)")
+//    }
 
 }
 
@@ -248,10 +248,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
         // ModalViewController 생성 및 delegate 설정
         let modalVC = ModalViewController()
         modalVC.selectedData = selectedItem
-        modalVC.delegate = self  // delegate 연결
-
+        
+        //delegate 아직도 모르겠네..
+//        modalVC.delegate = self  // delegate 연결
         // 선택한 데이터를 delegate를 통해 전달
-        modalVC.delegate?.didSelectItem(selectedItem)
+//        modalVC.delegate?.didSelectItem(selectedItem)
 
         
         let nvController = UINavigationController(rootViewController: modalVC)

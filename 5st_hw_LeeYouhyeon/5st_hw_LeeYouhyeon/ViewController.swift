@@ -16,7 +16,7 @@ class ViewController: UITabBarController {
     }
     
     func setTabBar(){
-        let vc1 = UINavigationController(rootViewController: HomeViewController())
+        let vc1 = HomeViewController()
         let vc2 = SearchViewController()
         let vc3 = ComingViewController()
         let vc4 = DownloadViewController()
