@@ -349,6 +349,7 @@ class ModalViewController: UIViewController {
         // 스크롤 뷰와 콘텐츠 뷰를 추가
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        contentView.addSubview(tableViewUI)
         
         //그외
         contentView.addSubview(mainImage)
@@ -390,8 +391,6 @@ class ModalViewController: UIViewController {
         
         contentView.addSubview(seasonnameLabel)
         contentView.addSubview(seasonimg)
-        
-        contentView.addSubview(tableViewUI)
                 
         tableViewUI.register(ModalTableCell.self, forCellReuseIdentifier: "modalCell")
         
@@ -408,6 +407,7 @@ class ModalViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+
             
             //
             // mainImage의 제약조건 설정
@@ -441,15 +441,15 @@ class ModalViewController: UIViewController {
             labelSeries.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 222),
             labelSeries.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -310),
             
-            moveTitleLabel.topAnchor.constraint(equalTo: labelSeries.bottomAnchor),
-            moveTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -510),
+            moveTitleLabel.topAnchor.constraint(equalTo: labelSeries.bottomAnchor, constant: 0),
+//            moveTitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -510),
             moveTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             moveTitleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
             dateLabel.topAnchor.constraint(equalTo: moveTitleLabel.bottomAnchor, constant: 9.5),
             dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
 //            dateLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
+//            
             tvmaImgicon.topAnchor.constraint(equalTo: moveTitleLabel.bottomAnchor, constant: 6),
             tvmaImgicon.leadingAnchor.constraint(equalTo: dateLabel.trailingAnchor, constant: 4),
             
@@ -488,14 +488,15 @@ class ModalViewController: UIViewController {
             subExplainLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             subExplainLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             subExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -320),
-            
+//            
             mylistImg.topAnchor.constraint(equalTo: subExplainLabel.bottomAnchor, constant: 32),
             mylistImg.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 39),
             mylistLabel.topAnchor.constraint(equalTo: mylistImg.bottomAnchor, constant: 6),
             mylistLabel.centerXAnchor.constraint(equalTo: mylistImg.centerXAnchor),
         
+
             goodImg.topAnchor.constraint(equalTo: subExplainLabel.bottomAnchor, constant: 32),
-            goodImg.leadingAnchor.constraint(equalTo: mylistLabel.trailingAnchor, constant: 63),
+            goodImg.leadingAnchor.constraint(equalTo: mylistImg.trailingAnchor, constant: 56),
             goodLabel.topAnchor.constraint(equalTo: goodImg.bottomAnchor, constant: 6),
             goodLabel.centerXAnchor.constraint(equalTo: goodImg.centerXAnchor),
         
@@ -504,7 +505,7 @@ class ModalViewController: UIViewController {
             shareImg.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -112),
             shareLabel.topAnchor.constraint(equalTo: shareImg.bottomAnchor, constant: 6),
             shareLabel.centerXAnchor.constraint(equalTo: shareImg.centerXAnchor),
-            shareLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -245),
+//            shareLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -245),
             
             //카테고리
             redbar.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 36),
@@ -528,14 +529,8 @@ class ModalViewController: UIViewController {
             
             seasonimg.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 97.5), //임시값
             seasonimg.leadingAnchor.constraint(equalTo: seasonnameLabel.trailingAnchor, constant: 6),
-            
-            tableViewUI.topAnchor.constraint(equalTo: seasonimg.topAnchor, constant: 19.5),
-            tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            tableViewUI.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            tableViewUI.heightAnchor.constraint(equalToConstant: 1300)  // 원하는 높이로 조정
-
-          
+            seasonimg.bottomAnchor.constraint(equalTo: seasonnameLabel.bottomAnchor),
+        
         ])
         
     }
