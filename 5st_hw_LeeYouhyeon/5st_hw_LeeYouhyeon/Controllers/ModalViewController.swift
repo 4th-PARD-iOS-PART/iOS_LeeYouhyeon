@@ -1,10 +1,20 @@
 import UIKit
 
-class ModalViewController: UIViewController{
+class ModalViewController: UIViewController {
 
+    let tableViewUI: UITableView = {
+        let tableVIew = UITableView()
+        tableVIew.backgroundColor = .black
+        tableVIew.translatesAutoresizingMaskIntoConstraints = false
+        tableVIew.separatorStyle = .none
+        
+        return tableVIew
+    }()
+    
     //선택된 데이터 저장 변수
     var selectedData: SearchModel?
 //    weak var delegate: ModalFromSearchDelegate?
+
     
     override func viewDidLoad(){
         super.viewDidLoad()
@@ -13,9 +23,14 @@ class ModalViewController: UIViewController{
         self.navigationController?.isNavigationBarHidden = true
         
         view.backgroundColor = .black
+        
+        tableViewUI.dataSource = self
+        tableViewUI.delegate = self
+        
         setUI()
         
     }
+    
     
     func setUI(){
         
@@ -274,6 +289,61 @@ class ModalViewController: UIViewController{
             label.font = UIFont.systemFont(ofSize: 10)
             return label
         }()
+        
+        
+        let seasonnameLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Season 5"
+            label.textColor = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1)
+            label.font = UIFont.systemFont(ofSize: 12)
+            return label
+        }()
+        let seasonimg: UIImageView = {
+            let img = UIImageView(image: UIImage(named:"chevron-down"))
+            img.translatesAutoresizingMaskIntoConstraints = false
+            img.contentMode = .scaleAspectFit
+            return img
+        }()
+        
+        let redbar: UIImageView = {
+            let img = UIImageView(image: UIImage(named:"bar (1)"))
+            img.translatesAutoresizingMaskIntoConstraints = false
+            img.contentMode = .scaleAspectFit
+            return img
+        }()
+        let bar1: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Episodes"
+            label.textColor = .white
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            return label
+        }()
+        let bar2: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Collection"
+            label.textColor = UIColor(red: 0.45, green: 0.45, blue: 0.45, alpha: 1)
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            return label
+        }()
+        let bar3: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "More Like This"
+            label.textColor = UIColor(red: 0.45, green: 0.45, blue: 0.45, alpha: 1)
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            return label
+        }()
+        let bar4: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "Trailers & More"
+            label.textColor = UIColor(red: 0.45, green: 0.45, blue: 0.45, alpha: 1)
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            return label
+        }()
     
         
         // 스크롤 뷰와 콘텐츠 뷰를 추가
@@ -309,6 +379,21 @@ class ModalViewController: UIViewController{
         contentView.addSubview(goodLabel)
         contentView.addSubview(shareImg)
         contentView.addSubview(shareLabel)
+        
+        
+        //카테고리 추가 필요
+        contentView.addSubview(redbar)
+        contentView.addSubview(bar1)
+        contentView.addSubview(bar2)
+        contentView.addSubview(bar3)
+        contentView.addSubview(bar4)
+        
+        contentView.addSubview(seasonnameLabel)
+        contentView.addSubview(seasonimg)
+        
+        contentView.addSubview(tableViewUI)
+                
+        tableViewUI.register(ModalTableCell.self, forCellReuseIdentifier: "modalCell")
         
         NSLayoutConstraint.activate([
             // scrollView의 제약조건 설정
@@ -353,7 +438,7 @@ class ModalViewController: UIViewController{
             netfixiconIng.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 1),
             netfixiconIng.trailingAnchor.constraint(equalTo: labelSeries.leadingAnchor, constant: -1),
             
-            labelSeries.topAnchor.constraint(equalTo: mainImage.bottomAnchor, constant: 12),
+            labelSeries.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 222),
             labelSeries.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -310),
             
             moveTitleLabel.topAnchor.constraint(equalTo: labelSeries.bottomAnchor),
@@ -402,6 +487,7 @@ class ModalViewController: UIViewController{
 //            mainExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -510),
             subExplainLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             subExplainLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            subExplainLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -320),
             
             mylistImg.topAnchor.constraint(equalTo: subExplainLabel.bottomAnchor, constant: 32),
             mylistImg.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 39),
@@ -415,9 +501,41 @@ class ModalViewController: UIViewController{
         
             shareImg.topAnchor.constraint(equalTo: subExplainLabel.bottomAnchor, constant: 32),
             shareImg.leadingAnchor.constraint(equalTo: goodLabel.trailingAnchor, constant: 63),
+            shareImg.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -112),
             shareLabel.topAnchor.constraint(equalTo: shareImg.bottomAnchor, constant: 6),
             shareLabel.centerXAnchor.constraint(equalTo: shareImg.centerXAnchor),
-        
+            shareLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -245),
+            
+            //카테고리
+            redbar.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 36),
+            redbar.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            redbar.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -323),
+            
+            bar1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bar1.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 52),
+            bar1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bar2.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 52),
+            bar2.leadingAnchor.constraint(equalTo: bar1.trailingAnchor, constant: 18.5),
+            bar3.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 52),
+            bar3.leadingAnchor.constraint(equalTo: bar2.trailingAnchor, constant: 18.5),
+            bar4.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 52),
+            bar4.leadingAnchor.constraint(equalTo: bar3.trailingAnchor, constant: 18.5),
+            bar4.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 34),
+            
+            seasonnameLabel.topAnchor.constraint(equalTo: bar4.bottomAnchor, constant: 30.5), //임시값
+            seasonnameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            seasonnameLabel.heightAnchor.constraint(equalToConstant: 15),
+            
+            seasonimg.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 97.5), //임시값
+            seasonimg.leadingAnchor.constraint(equalTo: seasonnameLabel.trailingAnchor, constant: 6),
+            
+            tableViewUI.topAnchor.constraint(equalTo: seasonimg.topAnchor, constant: 19.5),
+            tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            tableViewUI.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            tableViewUI.heightAnchor.constraint(equalToConstant: 1300)  // 원하는 높이로 조정
+
+          
         ])
         
     }
@@ -427,4 +545,31 @@ class ModalViewController: UIViewController{
 //        print("ff")
     }
     
+}
+
+
+extension ModalViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return SearchModel.SearchData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableViewUI.dequeueReusableCell(withIdentifier: "modalCell", for: indexPath) as? ModalTableCell else {
+            return UITableViewCell()
+        }
+        
+        cell.backgroundColor = .clear
+         
+        cell.selectionStyle = .none
+        
+        return cell
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 142
+    }
 }
