@@ -39,11 +39,11 @@ class MemberListCell: UITableViewCell{
     
     func setLabel(){
         NSLayoutConstraint.activate([
-            part.topAnchor.constraint(equalTo: contentView.centerYAnchor),
+            part.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             part.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
-            name.topAnchor.constraint(equalTo: contentView.centerYAnchor),
-            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+            name.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
         ])
     }
 }

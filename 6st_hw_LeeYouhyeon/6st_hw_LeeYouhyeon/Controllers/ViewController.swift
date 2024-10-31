@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     let tableViewUI: UITableView = {
         let tableVIew = UITableView()
-        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+//        tableVIew.backgroundColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
         tableVIew.translatesAutoresizingMaskIntoConstraints = false
         return tableVIew
     }()
@@ -35,8 +35,8 @@ class ViewController: UIViewController {
                 if let error = error {
                     print("Error fetching members!: \(error)")
                 } else if let members = members {
-//                    self.members = members // 가져온 멤버 정보를 저장
-//                    self.tableViewUI.reloadData() // 테이블 뷰 업데이트
+                    self.members = members // 가져온 멤버 정보를 저장
+                    self.tableViewUI.reloadData() // 테이블 뷰 업데이트
                     print("Fetched members: \(members)")
                 }
             }
@@ -108,12 +108,6 @@ class ViewController: UIViewController {
         modalViewController.modalPresentationStyle = .formSheet
         self.present(modalViewController, animated: true)
     }
-
-    @objc func tapEditModalButton() {
-        let modalViewController = ModalEditViewController()
-        modalViewController.modalPresentationStyle = .formSheet
-        self.present(modalViewController, animated: true)
-    }
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
@@ -138,11 +132,19 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     // 셀이 선택되었을 때 호출되는 메서드
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndex = indexPath.row  // 선택된 셀의 인덱스 저장
+        
+        let modalViewController = DetailModalController()
+        let member = members[indexPath.row]
+        
+        modalViewController.selectMember = member
+
+        modalViewController.modalPresentationStyle = .formSheet
+        self.present(modalViewController, animated: true)
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 100.0
-//    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50.0
+    }
     
 }
 
