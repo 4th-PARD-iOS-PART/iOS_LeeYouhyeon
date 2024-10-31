@@ -29,6 +29,18 @@ class ViewController: UIViewController {
         tableViewUI.dataSource = self
         tableViewUI.delegate = self
         setUI()
+        
+        APIService.shared.getMembers(part: "iOS") { members, error in
+            DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행해야 합니다.
+                if let error = error {
+                    print("Error fetching members!: \(error)")
+                } else if let members = members {
+//                    self.members = members // 가져온 멤버 정보를 저장
+//                    self.tableViewUI.reloadData() // 테이블 뷰 업데이트
+                    print("Fetched members: \(members)")
+                }
+            }
+        }
     }
 
     func setUI(){
