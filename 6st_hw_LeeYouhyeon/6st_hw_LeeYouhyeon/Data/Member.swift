@@ -7,8 +7,14 @@
 
 import Foundation
 
-struct Member {
+struct Member: Codable {
     var id : Int
+    var name : String
+    var part : String
+    var age : Int
+}
+
+struct SendMember: Codable {
     var name : String
     var part : String
     var age : Int

@@ -39,29 +39,59 @@ class ViewController: UIViewController {
             return contents
         }()
         
+        let title: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.font = UIFont.systemFont(ofSize: 25, weight: .bold)
+            label.text = "UrlSession"
+            label.textColor = UIColor.black
+            return label
+        }()
+        
+        let AddButton : UIButton = {
+            let button = UIButton()
+            button.setTitle("추가", for: .normal)
+            button.setTitleColor(.systemBlue, for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: #selector(tapAddModalButton), for: .touchUpInside)
+            return button
+        }()
+        
         view.addSubview(contentView)
         contentView.addSubview(tableViewUI)
+        contentView.addSubview(title)
+        contentView.addSubview(AddButton)
         
         tableViewUI.register(MemberListCell.self, forCellReuseIdentifier: "memberListCell")
         
         NSLayoutConstraint.activate([
 
-            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
+            title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+//            title.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            tableViewUI.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            tableViewUI.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
-            tableViewUI.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
-            tableViewUI.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            AddButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            AddButton.leadingAnchor.constraint(equalTo: title.trailingAnchor, constant: 100),
+            AddButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            tableViewUI.topAnchor.constraint(equalTo: title.bottomAnchor, constant: 40),
+            tableViewUI.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableViewUI.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableViewUI.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            
             
         ])
         
     }
     
     @objc func tapAddModalButton() {
+        print("콘솔창 확인")
         let modalViewController = ModalAddViewController()
         modalViewController.modalPresentationStyle = .formSheet
         self.present(modalViewController, animated: true)
@@ -83,15 +113,25 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     // 각 셀에 표시할 데이터 설정
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "memberListCell", for: indexPath)
-//        let member = members[indexPath.row]
-//        cell.textLabel?.text = "[ \(member.part) ] \(member.name)"  // 셀에 멤버의 파트와 이름 표시
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "memberListCell", for: indexPath) as? MemberListCell else {
+            return UITableViewCell()
+        }
+        
+        let member = members[indexPath.row]
+        cell.part.text = "[ \(member.part) ]"  // 셀에 멤버의 파트와 이름 표시
+        cell.name.text = "\(member.name)"
         return cell
     }
     
     // 셀이 선택되었을 때 호출되는 메서드
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        selectedIndex = indexPath.row  // 선택된 셀의 인덱스 저장
+        selectedIndex = indexPath.row  // 선택된 셀의 인덱스 저장
     }
+    
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 100.0
+//    }
+    
 }
+
 
