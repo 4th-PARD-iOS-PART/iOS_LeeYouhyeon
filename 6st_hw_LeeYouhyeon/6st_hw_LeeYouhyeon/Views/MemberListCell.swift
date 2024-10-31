@@ -43,7 +43,7 @@ class MemberListCell: UITableViewCell{
             part.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             name.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+            name.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100),
         ])
     }
 }

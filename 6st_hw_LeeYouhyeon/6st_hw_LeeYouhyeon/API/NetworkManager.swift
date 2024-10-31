@@ -68,7 +68,8 @@ class NetworkManager {
                     return
                 }
                 
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+                //서버로부터 200 응답이 왔을 경우
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                     completion(NSError(domain: "HTTPError", code: -1, userInfo: nil))
                     return
                 }

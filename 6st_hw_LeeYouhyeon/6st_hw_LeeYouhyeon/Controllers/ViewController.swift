@@ -9,7 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var members: [Member] = []  // 테이블 뷰에 표시할 멤버 정보 리스트
+    let parts = ["iOS", "WEB", "SERVER"]
+    var allMembers: [Member] = []  // 테이블 뷰에 표시할 멤버 정보 리스트
     var selectedIndex: Int?     // 선택된 셀의 인덱스
     
     let tableViewUI: UITableView = {
@@ -30,17 +31,8 @@ class ViewController: UIViewController {
         tableViewUI.delegate = self
         setUI()
         
-        APIService.shared.getMembers(part: "iOS") { members, error in
-            DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행해야 합니다.
-                if let error = error {
-                    print("Error fetching members!: \(error)")
-                } else if let members = members {
-                    self.members = members // 가져온 멤버 정보를 저장
-                    self.tableViewUI.reloadData() // 테이블 뷰 업데이트
-                    print("Fetched members: \(members)")
-                }
-            }
-        }
+        getAllMembers()
+        
     }
 
     func setUI(){
@@ -108,13 +100,37 @@ class ViewController: UIViewController {
         modalViewController.modalPresentationStyle = .formSheet
         self.present(modalViewController, animated: true)
     }
+    
+    func getAllMembers() {
+        let dispatchGroup = DispatchGroup()
+        
+        for part in parts {
+            dispatchGroup.enter() // 그룹에 작업 추가
+            
+            APIService.shared.getMembers(part: part) { members, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error fetching members for \(part): \(error)")
+                    } else if let members = members {
+                        self.allMembers.append(contentsOf: members) // 해당 파트 멤버 추가
+                    }
+                    dispatchGroup.leave() // 작업 완료
+                }
+            }
+        }
+        
+        // 모든 작업 완료 후 실행할 코드
+        dispatchGroup.notify(queue: .main) {
+            self.tableViewUI.reloadData() // 테이블 뷰 업데이트
+        }
+    }
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     // 테이블 뷰의 셀 개수 설정
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return members.count
+        return allMembers.count
     }
     
     // 각 셀에 표시할 데이터 설정
@@ -123,7 +139,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
         
-        let member = members[indexPath.row]
+        let member = allMembers[indexPath.row]
         cell.part.text = "[ \(member.part) ]"  // 셀에 멤버의 파트와 이름 표시
         cell.name.text = "\(member.name)"
         return cell
@@ -134,7 +150,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         selectedIndex = indexPath.row  // 선택된 셀의 인덱스 저장
         
         let modalViewController = DetailModalController()
-        let member = members[indexPath.row]
+        let member = allMembers[indexPath.row]
         
         modalViewController.selectMember = member
 

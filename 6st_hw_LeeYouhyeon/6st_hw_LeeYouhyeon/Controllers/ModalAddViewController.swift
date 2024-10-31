@@ -116,9 +116,18 @@ class ModalAddViewController: UIViewController {
         let newMember = SendMember(name: name, part: part, age: age)
         // 확인용 출력
         print("저장된 멤버: \(newMember)")
-        
-        print("클릭")
         //나중에 notificationcenter로 확인 후 서버 전달
+        
+        APIService.shared.postMember(data: newMember) { error in
+            DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행해야 합니다.
+                if let error = error {
+                    print("Error posting members!: \(error)")
+                } else {
+                    print("Member posted successfully!")
+                }
+            }
+        }
+        
         self.dismiss(animated: true)
     }
     
