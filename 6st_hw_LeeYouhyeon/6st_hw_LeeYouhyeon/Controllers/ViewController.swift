@@ -32,6 +32,7 @@ class ViewController: UIViewController {
         setUI()
         
         getAllMembers()
+        NotificationCenter.default.addObserver(self, selector: #selector(getAllMembers), name: .postNotification, object: nil)
         
     }
 
@@ -101,7 +102,10 @@ class ViewController: UIViewController {
         self.present(modalViewController, animated: true)
     }
     
-    func getAllMembers() {
+    @objc func getAllMembers() {
+        // 모든 멤버를 가져오기 전에 배열 초기화
+        allMembers.removeAll()
+        
         let dispatchGroup = DispatchGroup()
         
         for part in parts {
@@ -112,6 +116,7 @@ class ViewController: UIViewController {
                     if let error = error {
                         print("Error fetching members for \(part): \(error)")
                     } else if let members = members {
+//                        print("추가된 멤버 확인 \(members) \n")
                         self.allMembers.append(contentsOf: members) // 해당 파트 멤버 추가
                     }
                     dispatchGroup.leave() // 작업 완료

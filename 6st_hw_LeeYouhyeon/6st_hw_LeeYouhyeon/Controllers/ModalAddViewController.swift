@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+//포스트 후 데이터 업데이트를 위함
+extension Notification.Name {
+    static let postNotification = Notification.Name("postNotification")
+}
+
 class ModalAddViewController: UIViewController {
     
     // 텍스트 필드
@@ -124,6 +129,8 @@ class ModalAddViewController: UIViewController {
                     print("Error posting members!: \(error)")
                 } else {
                     print("Member posted successfully!")
+                    
+                    NotificationCenter.default.post(name: .postNotification, object: nil)
                 }
             }
         }
