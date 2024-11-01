@@ -2,9 +2,6 @@ import Foundation
 import UIKit
 
 class NetworkManager {
-    struct UsersResponse: Codable {
-        let users: [Member]
-    }
     
     // GET 요청
     func getData(from urlString: String, completion: @escaping ([Member]?, Error?) -> Void) {
