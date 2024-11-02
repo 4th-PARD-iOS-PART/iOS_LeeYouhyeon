@@ -14,6 +14,8 @@ extension Notification.Name {
 }
 
 class ModalAddViewController: UIViewController {
+    var mode :String = "add"
+    var selectMember: Member?
     
     // 텍스트 필드
      let nameTextField: UITextField = {
@@ -52,6 +54,17 @@ class ModalAddViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
         
         view.backgroundColor = .white
+        
+        if mode == "edit", let selectMember = selectMember {
+            nameTextField.text = selectMember.name
+        }
+        if mode == "edit", let selectMember = selectMember {
+            ageTextField.text = String(selectMember.age)
+        }
+        if mode == "edit", let selectMember = selectMember {
+            partTextField.text = selectMember.part
+        }
+        
         setUI()
     }
     
@@ -65,10 +78,17 @@ class ModalAddViewController: UIViewController {
         
         let AddButton : UIButton = {
             let button = UIButton()
-            button.setTitle("추가하기", for: .normal)
+            
+            if mode == "add" {
+                button.setTitle("추가하기", for: .normal)
+                button.addTarget(self, action: #selector(addAndDismissModal), for: .touchUpInside)
+            }
+            else{
+                button.setTitle("수정하기", for: .normal)
+                button.addTarget(self, action: #selector(editAndDismissModal), for: .touchUpInside)
+            }
             button.setTitleColor(.systemBlue, for: .normal)
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.addTarget(self, action: #selector(addAndDismissModal), for: .touchUpInside)
             return button
         }()
         
@@ -124,6 +144,41 @@ class ModalAddViewController: UIViewController {
         //나중에 notificationcenter로 확인 후 서버 전달
         
         APIService.shared.postMember(data: newMember) { error in
+            DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행해야 합니다.
+                if let error = error {
+                    print("Error posting members!: \(error)")
+                } else {
+                    print("Member posted successfully!")
+                    
+                    NotificationCenter.default.post(name: .postNotification, object: nil)
+                }
+            }
+        }
+        
+        self.dismiss(animated: true)
+    }
+    
+    //수정
+    @objc func editAndDismissModal(){
+        guard let name = nameTextField.text, !name.isEmpty,
+              let ageText = ageTextField.text,
+              let part = partTextField.text,!part.isEmpty,
+              let age = Int(ageText) else {
+            showAlert(message: "입력 데이터가 올바르지 않습니다.")
+            return
+        }
+        
+        // Member 인스턴스 생성
+        let newMember = SendMember(name: name, part: part, age: age)
+        // 확인용 출력
+        print("저장된 멤버: \(newMember)")
+        //나중에 notificationcenter로 확인 후 서버 전달
+        
+        guard let selectMember = selectMember else {
+            return
+        }
+        
+        APIService.shared.updateMember(withId: selectMember.id, data: newMember){ error in
             DispatchQueue.main.async { // UI 업데이트는 메인 스레드에서 수행해야 합니다.
                 if let error = error {
                     print("Error posting members!: \(error)")

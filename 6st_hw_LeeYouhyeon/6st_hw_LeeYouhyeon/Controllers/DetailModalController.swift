@@ -2,6 +2,10 @@
 import Foundation
 import UIKit
 
+extension Notification.Name {
+    static let deleteNotification = Notification.Name("deleteNotification")
+}
+
 class DetailModalController: UIViewController {
     var selectMember: Member?
     
@@ -124,13 +128,45 @@ class DetailModalController: UIViewController {
     
     @objc func DeleteAndDismissModal(){
         print("삭제")
+        guard let selectMember = selectMember else {
+            return
+        }
+        
+        APIService.shared.deleteMember(withId: selectMember.id) { error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error posting members!: \(error)")
+                } else {
+                    print("Member posted successfully!")
+                    
+                    NotificationCenter.default.post(name: .deleteNotification, object: nil)
+                }
+            }
+        }
+        
         self.dismiss(animated: true)
     }
     
     @objc func EditAndDismissModal(){
         print("수정")
-        self.dismiss(animated: true)
+        guard let selectMember = selectMember else {
+            return
+        }
+        
+        // 현재 모달을 닫고, 닫힌 후에 새로운 모달을 표시합니다.
+        self.dismiss(animated: true) { [weak self] in
+            // ModalAddViewController 생성 및 설정
+            let modalViewController = ModalAddViewController()
+            modalViewController.selectMember = selectMember
+            modalViewController.mode = "edit"
+            
+            // 현재 topmost viewController를 찾아 새로운 모달을 표시합니다.
+            if let topController = UIApplication.shared.keyWindow?.rootViewController {
+                topController.present(modalViewController, animated: true)
+            }
+        }
     }
+
     
 }
 

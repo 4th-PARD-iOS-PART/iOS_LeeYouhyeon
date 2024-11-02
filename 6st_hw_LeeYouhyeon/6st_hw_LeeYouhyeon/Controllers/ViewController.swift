@@ -9,7 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let parts = ["iOS", "WEB", "SERVER"]
+//    let parts = ["iOS", "WEB", "SERVER"]
+    let parts = ["all"]
     var allMembers: [Member] = []  // 테이블 뷰에 표시할 멤버 정보 리스트
     var selectedIndex: Int?     // 선택된 셀의 인덱스
     
@@ -33,6 +34,7 @@ class ViewController: UIViewController {
         
         getAllMembers()
         NotificationCenter.default.addObserver(self, selector: #selector(getAllMembers), name: .postNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(getAllMembers), name: .deleteNotification, object: nil)
         
     }
 

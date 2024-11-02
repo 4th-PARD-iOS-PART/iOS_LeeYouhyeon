@@ -94,10 +94,10 @@ class NetworkManager {
                 return
             }
             
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 else {
-                completion(NSError(domain: "HTTPError", code: -1, userInfo: nil))
-                return
-            }
+//            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 204 else {
+//                completion(NSError(domain: "HTTPError", code: -1, userInfo: nil))
+//                return
+//            }
             
             completion(nil)
         }.resume()
